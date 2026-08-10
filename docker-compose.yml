@@ -13,5 +13,16 @@ services:
     volumes:
       - timetrack_pgdata:/var/lib/postgresql/data
 
+  app:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - DATABASE_URL=postgresql://timetrack:timetrack@db:5432/timetrack
+      - FLASK_ENV=development
+    depends_on:
+      - db
+
 volumes:
   timetrack_pgdata:
