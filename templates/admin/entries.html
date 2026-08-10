@@ -36,6 +36,7 @@
 </div>
 
 <form method="POST" action="{{ url_for('admin.confirm_bulk') }}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 <div class="card">
   <div class="table-responsive">
     <table class="table mb-0 align-middle">
