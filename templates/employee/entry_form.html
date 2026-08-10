@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Modifica voce' if editing else 'Nuova voce' }}{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card p-4">
+      <h4 class="mb-3">{{ 'Modifica voce' if editing else 'Nuova voce di orario' }}</h4>
+      <p class="text-muted small">Intervallo consentito: {{ min_date.strftime('%d/%m/%Y') }} — {{ max_date.strftime('%d/%m/%Y') }}</p>
+      <form method="POST">
+        {{ form.hidden_tag() }}
+        <div class="mb-3">
+          {{ form.work_date.label(class="form-label") }}
+          {{ form.work_date(class="form-control", min=min_date.isoformat(), max=max_date.isoformat()) }}
+          {% for error in form.work_date.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+        </div>
+        <div class="mb-3">
+          {{ form.project_id.label(class="form-label") }}
+          {{ form.project_id(class="form-select") }}
+          {% for error in form.project_id.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+        </div>
+        <div class="mb-3">
+          {{ form.hours.label(class="form-label") }}
+          {{ form.hours(class="form-control", step="0.25") }}
+          {% for error in form.hours.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+        </div>
+        <div class="mb-3">
+          {{ form.notes.label(class="form-label") }}
+          {{ form.notes(class="form-control", rows=2) }}
+        </div>
+        <div class="d-flex justify-content-between">
+          <a href="{{ url_for('employee.dashboard') }}" class="btn btn-outline-secondary">Annulla</a>
+          {{ form.submit(class="btn btn-primary") }}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

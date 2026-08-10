@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Utenti{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3>Utenti</h3>
+  <a href="{{ url_for('admin.new_user') }}" class="btn btn-primary">+ Nuovo utente</a>
+</div>
+<div class="card">
+  <div class="table-responsive">
+    <table class="table mb-0 align-middle">
+      <thead>
+        <tr><th>Nome utente</th><th>Nome</th><th>Email</th><th>Ruolo</th><th>Stato</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+        <tr>
+          <td>{{ u.username }}</td>
+          <td>{{ u.full_name }}</td>
+          <td>{{ u.email or "—" }}</td>
+          <td>{{ 'Amministratore' if u.role == 'admin' else 'Dipendente' }}</td>
+          <td>
+            {% if u.active %}<span class="badge bg-success">Attivo</span>{% else %}<span class="badge bg-secondary">Disattivo</span>{% endif %}
+          </td>
+          <td class="text-end">
+            <a href="{{ url_for('admin.edit_user', user_id=u.id) }}" class="btn btn-sm btn-outline-secondary">Modifica</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

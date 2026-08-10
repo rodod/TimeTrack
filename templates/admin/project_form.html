@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Modifica progetto' if editing else 'Nuovo progetto' }}{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card p-4">
+      <h4 class="mb-3">{{ 'Modifica progetto' if editing else 'Nuovo progetto' }}</h4>
+      <form method="POST">
+        {{ form.hidden_tag() }}
+        <div class="mb-3">
+          {{ form.name.label(class="form-label") }}
+          {{ form.name(class="form-control") }}
+        </div>
+        <div class="mb-3">
+          {{ form.description.label(class="form-label") }}
+          {{ form.description(class="form-control") }}
+        </div>
+        <div class="form-check mb-3">
+          {{ form.active(class="form-check-input") }}
+          {{ form.active.label(class="form-check-label") }}
+        </div>
+        <div class="d-flex justify-content-between">
+          <a href="{{ url_for('admin.projects') }}" class="btn btn-outline-secondary">Annulla</a>
+          {{ form.submit(class="btn btn-primary") }}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

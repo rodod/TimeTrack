@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Riepilogo{% endblock %}
+{% block content %}
+<h3 class="mb-4">Riepilogo amministratore</h3>
+
+<div class="row mb-4">
+  <div class="col-md-3">
+    <div class="card p-3 text-center">
+      <div class="fs-3">{{ total_users }}</div>
+      <div class="text-muted">Utenti attivi</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card p-3 text-center">
+      <div class="fs-3">{{ total_projects }}</div>
+      <div class="text-muted">Progetti attivi</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card p-3 text-center">
+      <div class="fs-3">{{ pending }}</div>
+      <div class="text-muted">Voci da confermare</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    Settimana corrente ({{ start_of_week.strftime('%d/%m') }} — {{ end_of_week.strftime('%d/%m/%Y') }})
+  </div>
+  <div class="table-responsive">
+    <table class="table mb-0">
+      <thead>
+        <tr><th>Dipendente</th><th>Data</th><th>Progetto</th><th>Ore</th><th>Stato</th></tr>
+      </thead>
+      <tbody>
+        {% for e in week_entries|sort(attribute='work_date') %}
+        <tr>
+          <td>{{ e.user.full_name }}</td>
+          <td>{{ e.work_date.strftime('%a %d/%m') }}</td>
+          <td>{{ e.project.name }}</td>
+          <td>{{ e.hours }}</td>
+          <td><span class="badge badge-status-{{ e.status }}">{{ e.status }}</span></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" class="text-muted text-center">Nessuna voce questa settimana.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="mt-3">
+  <a href="{{ url_for('admin.entries') }}" class="btn btn-primary">Vai a tutte le ore / Export</a>
+</div>
+{% endblock %}
