@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Progetti{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3>Progetti</h3>
+  <a href="{{ url_for('admin.new_project') }}" class="btn btn-primary">+ Nuovo progetto</a>
+</div>
+<div class="card">
+  <div class="table-responsive">
+    <table class="table mb-0 align-middle">
+      <thead>
+        <tr><th>Nome</th><th>Descrizione</th><th>Stato</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for p in projects %}
+        <tr>
+          <td>{{ p.name }}</td>
+          <td>{{ p.description or "—" }}</td>
+          <td>
+            {% if p.active %}<span class="badge bg-success">Attivo</span>{% else %}<span class="badge bg-secondary">Disattivo</span>{% endif %}
+          </td>
+          <td class="text-end">
+            <a href="{{ url_for('admin.edit_project', project_id=p.id) }}" class="btn btn-sm btn-outline-secondary">Modifica</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

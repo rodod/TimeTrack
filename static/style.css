@@ -1,0 +1,17 @@
+body {
+  background-color: #f5f6fa;
+}
+.card {
+  border: none;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+.week-block {
+  margin-bottom: 2rem;
+}
+.badge-status-pianificato {
+  background-color: #ffc107;
+  color: #212529;
+}
+.badge-status-confermato {
+  background-color: #198754;
+}

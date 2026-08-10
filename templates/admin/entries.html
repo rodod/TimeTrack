@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Ore / Export{% endblock %}
+{% block content %}
+<h3 class="mb-3">Ore lavorate</h3>
+
+<form method="GET" class="row g-2 mb-3">
+  <div class="col-md-3">
+    <select name="user_id" class="form-select">
+      <option value="">Tutti i dipendenti</option>
+      {% for u in users %}
+      <option value="{{ u.id }}" {% if filters.get('user_id')|string == u.id|string %}selected{% endif %}>{{ u.full_name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-3">
+    <select name="project_id" class="form-select">
+      <option value="">Tutti i progetti</option>
+      {% for p in projects %}
+      <option value="{{ p.id }}" {% if filters.get('project_id')|string == p.id|string %}selected{% endif %}>{{ p.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-2">
+    <input type="date" name="date_from" class="form-control" value="{{ filters.get('date_from','') }}">
+  </div>
+  <div class="col-md-2">
+    <input type="date" name="date_to" class="form-control" value="{{ filters.get('date_to','') }}">
+  </div>
+  <div class="col-md-2 d-flex gap-2">
+    <button type="submit" class="btn btn-outline-primary flex-fill">Filtra</button>
+  </div>
+</form>
+
+<div class="mb-3">
+  <a href="{{ url_for('admin.export', **filters) }}" class="btn btn-success">⬇ Esporta Excel (busta paga)</a>
+</div>
+
+<form method="POST" action="{{ url_for('admin.confirm_bulk') }}">
+<div class="card">
+  <div class="table-responsive">
+    <table class="table mb-0 align-middle">
+      <thead>
+        <tr>
+          <th><input type="checkbox" onclick="document.querySelectorAll('.entry-check').forEach(c=>c.checked=this.checked)"></th>
+          <th>Dipendente</th><th>Data</th><th>Progetto</th><th>Ore</th><th>Stato</th><th>Note</th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for e in entries %}
+        <tr>
+          <td>
+            {% if e.status != 'confermato' %}
+            <input type="checkbox" name="entry_ids" value="{{ e.id }}" class="entry-check">
+            {% endif %}
+          </td>
+          <td>{{ e.user.full_name }}</td>
+          <td>{{ e.work_date.strftime('%d/%m/%Y') }}</td>
+          <td>{{ e.project.name }}</td>
+          <td>{{ e.hours }}</td>
+          <td><span class="badge badge-status-{{ e.status }}">{{ e.status }}</span></td>
+          <td>{{ e.notes or "" }}</td>
+          <td class="text-end">
+            {% if e.status != 'confermato' %}
+            <button type="submit" formaction="{{ url_for('admin.confirm_entry', entry_id=e.id) }}" class="btn btn-sm btn-outline-success">Conferma</button>
+            {% endif %}
+            <button type="submit" formaction="{{ url_for('admin.delete_entry', entry_id=e.id) }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Eliminare questa voce?');">Elimina</button>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="8" class="text-center text-muted">Nessuna voce trovata.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% if entries %}
+<button type="submit" formaction="{{ url_for('admin.confirm_bulk') }}" class="btn btn-success mt-3">Conferma selezionate</button>
+{% endif %}
+</form>
+{% endblock %}
